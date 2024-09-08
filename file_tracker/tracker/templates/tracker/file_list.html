@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File List</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .file-list {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .file-list h1 {
+            margin-bottom: 20px;
+        }
+        .file-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .file-list li {
+            padding: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .file-list li:last-child {
+            border-bottom: none;
+        }
+        .file-list a {
+            margin-right: 10px;
+        }
+        .upload-btn {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="file-list">
+            <h1 class="text-center">Your Files</h1>
+            <ul>
+                {% for file in files %}
+                <li class="d-flex justify-content-between align-items-center">
+                    <span>{{ file.file_name }}</span>
+                    <span>
+                        <a href="{% url 'pass_file' file.id %}" class="btn btn-sm btn-success">Pass</a>
+                        <a href="{% url 'file_log' file.id %}" class="btn btn-sm btn-info">View Log</a>
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'upload_file' %}" class="btn btn-primary upload-btn">Upload New File</a>
+        </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endblock content %}

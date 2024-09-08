@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pass File</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .pass-file-form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .pass-file-form h1 {
+            margin-bottom: 20px;
+        }
+        .pass-file-form button {
+            width: 100%;
+        }
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .real-time-log {
+            margin-top: 30px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .real-time-log h2 {
+            margin-bottom: 20px;
+        }
+        .real-time-log #log {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pass-file-form">
+            <h1 class="text-center">Pass File: {{ file.file_name }}</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary" id="pass-file">Pass File</button>
+            </form>
+            <a href="{% url 'file_list' %}" class="back-link">Back to File List</a>
+        </div>
+        <div class="real-time-log">
+            <h2 class="text-center">Real-time Log</h2>
+            <div id="log" class="border p-3"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const fileSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/file_tracker/'
+        );
+
+        fileSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.querySelector('#log').innerHTML += '<p>' + data.message + '</p>';
+        };
+
+        document.querySelector('#pass-file').onclick = function(e) {
+            const message = 'File passed from {{ user.username }} to ' + document.querySelector('select[name="passed_to"] option:checked').text;
+            fileSocket.send(JSON.stringify({
+                'message': message
+            }));
+        };
+    </script>
+</body>
+</html>

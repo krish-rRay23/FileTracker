@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .upload-form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .upload-form h1 {
+            margin-bottom: 20px;
+        }
+        .upload-form button {
+            width: 100%;
+        }
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .comments-section {
+            margin-top: 30px;
+        }
+        .comment {
+            margin-bottom: 20px;
+        }
+        .comment-form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="upload-form">
+            <h1 class="text-center">Upload File</h1>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+            <a href="{% url 'file_list' %}" class="back-link">Back to File List</a>
+        </div>
+<!-- Comments Section -->
+<div class="comments-section">
+    <h2>Comments</h2>
+    {% for comment in comments %}
+        <div class="comment">
+            <p><strong>{{ comment.user }}</strong> said:</p>
+            <p>{{ comment.text }}</p>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Comment Form -->
+<div class="comment-form">
+    <h3>Leave a Comment</h3>
+    <form method="post" action="{% url 'add_comment' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="comment">Comment:</label>
+            <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
